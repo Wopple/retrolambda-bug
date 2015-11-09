@@ -1,0 +1,40 @@
+apply plugin: 'java'
+apply plugin: 'maven-publish'
+apply plugin: 'me.tatarka.retrolambda'
+
+sourceCompatibility = 1.8
+
+group 'org.daniel'
+version = '1.0'
+
+dependencies {
+    compile 'org.daniel:modc:1.0'
+}
+
+task sourceJar(type: Jar) {
+    from sourceSets.main.java.srcDirs
+}
+
+publishing {
+    publications {
+        release(MavenPublication) {
+            artifact "${project.buildDir}/libs/${project.name}-${project.version}.jar"
+            artifactId 'modb'
+
+            artifact sourceJar {
+                classifier "sources"
+            }
+
+            pom.withXml {
+                def dependenciesNode = asNode().appendNode('dependencies')
+
+                configurations.compile.allDependencies.each {
+                    def dependencyNode = dependenciesNode.appendNode('dependency')
+                    dependencyNode.appendNode('groupId', it.group)
+                    dependencyNode.appendNode('artifactId', it.name)
+                    dependencyNode.appendNode('version', it.version)
+                }
+            }
+        }
+    }
+}

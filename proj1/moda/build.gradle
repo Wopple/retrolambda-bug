@@ -1,0 +1,13 @@
+apply plugin: 'java'
+apply plugin: 'maven-publish'
+apply plugin: 'me.tatarka.retrolambda'
+
+sourceCompatibility = 1.8
+
+group 'org.daniel'
+version = '1.0'
+
+dependencies {
+    compile 'org.daniel:modb:1.0'
+    compile project(':modc')
+}
